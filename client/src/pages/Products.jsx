@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getAllProducts, createProduct, updateProduct, deleteProduct } from '../api/products';
 import { v4 as uuidv4 } from 'uuid';
+import AlertModal from '../components/AlertModal';
 
 const EMPTY = { product_name: '', product_category: '', price: '', quantity: '' };
 
@@ -9,6 +10,7 @@ export default function Products() {
   const [form, setForm] = useState(EMPTY);
   const [editingId, setEditingId] = useState(null);
   const [error, setError] = useState('');
+  const [alert, setAlert] = useState(null);
 
   const load = async () => {
     try {
@@ -39,14 +41,19 @@ export default function Products() {
       };
       if (editingId) {
         await updateProduct(editingId, payload);
+        setAlert({ message: 'Product updated successfully', type: 'success' });
       } else {
         await createProduct({ id: uuidv4(), ...payload });
+        setAlert({ message: 'Product created successfully', type: 'success' });
       }
       setForm(EMPTY);
       setEditingId(null);
       await load();
     } catch (err) {
-      setError(err.response?.data?.message || err.response?.data?.error || 'Operation failed');
+      setAlert({
+        message: err.response?.data?.message || err.response?.data?.error || 'Operation failed',
+        type: 'error',
+      });
     }
   };
 
@@ -64,9 +71,13 @@ export default function Products() {
     setError('');
     try {
       await deleteProduct(id);
+      setAlert({ message: 'Product deleted successfully', type: 'success' });
       await load();
     } catch (err) {
-      setError(err.response?.data?.message || 'Delete failed');
+      setAlert({
+        message: err.response?.data?.message || 'Delete failed',
+        type: 'error',
+      });
     }
   };
 
@@ -80,6 +91,14 @@ export default function Products() {
       <h1 className="text-2xl font-bold mb-6 text-gray-800">Products</h1>
 
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+
+      {alert && (
+        <AlertModal
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert(null)}
+        />
+      )}
 
       <form onSubmit={handleSubmit} className="bg-white shadow rounded p-4 mb-6 grid grid-cols-2 gap-4">
         <input

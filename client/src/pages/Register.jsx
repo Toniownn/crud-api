@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import AlertModal from '../components/AlertModal';
 
 export default function Register() {
   const [form, setForm] = useState({
     fname: '', lname: '', address: '', username: '', password: '',
   });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [alert, setAlert] = useState(null);
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -16,15 +16,21 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
     try {
       await register(form);
-      setSuccess('Registration successful! Redirecting to login...');
-      setTimeout(() => navigate('/login'), 1500);
+      setAlert({ message: 'Registration successful!', type: 'success', redirect: true });
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setAlert({
+        message: err.response?.data?.message || 'Registration failed',
+        type: 'error',
+      });
     }
+  };
+
+  const handleAlertClose = () => {
+    const shouldRedirect = alert?.redirect;
+    setAlert(null);
+    if (shouldRedirect) navigate('/login');
   };
 
   const fields = [
@@ -37,11 +43,16 @@ export default function Register() {
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
+      {alert && (
+        <AlertModal
+          message={alert.message}
+          type={alert.type}
+          onClose={handleAlertClose}
+        />
+      )}
+
       <form onSubmit={handleSubmit} className="bg-white shadow rounded p-8 w-full max-w-sm">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">Register</h2>
-
-        {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
-        {success && <p className="text-green-600 text-sm mb-4">{success}</p>}
 
         {fields.map(({ name, label, type }) => (
           <label key={name} className="block mb-4">

@@ -1,31 +1,46 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import AlertModal from '../components/AlertModal';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [alert, setAlert] = useState(null);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     try {
       await login(username, password);
-      navigate('/products');
+      setAlert({ message: 'Login successful!', type: 'success', redirect: true });
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      setAlert({
+        message: err.response?.data?.message || 'Login failed',
+        type: 'error',
+      });
     }
+  };
+
+  const handleAlertClose = () => {
+    const shouldRedirect = alert?.redirect;
+    setAlert(null);
+    if (shouldRedirect) navigate('/products');
   };
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
+      {alert && (
+        <AlertModal
+          message={alert.message}
+          type={alert.type}
+          onClose={handleAlertClose}
+        />
+      )}
+
       <form onSubmit={handleSubmit} className="bg-white shadow rounded p-8 w-full max-w-sm">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">Login</h2>
-
-        {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
 
         <label className="block mb-4">
           <span className="text-gray-700 text-sm">Username</span>
