@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { getAssistant } from '../api/assistant';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 export default function Assistant() {
   const [assistantId, setAssistantId] = useState('');
@@ -24,21 +25,26 @@ export default function Assistant() {
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">AI Assistant Lookup</h1>
+      <h1 className="text-3xl font-black uppercase text-black mb-8">
+        AI Assistant Lookup
+      </h1>
 
-      <form onSubmit={handleSubmit} className="bg-white shadow rounded p-4 mb-6 flex gap-3">
-        <input
-          type="text"
-          placeholder="Enter Assistant ID (e.g. asst_...)"
-          value={assistantId}
-          onChange={(e) => setAssistantId(e.target.value)}
-          required
-          className="flex-1 border border-gray-300 rounded px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+      <form onSubmit={handleSubmit} className="bg-white rounded-[20px] border border-gray-200 p-6 mb-6 flex gap-3">
+        <div className="relative flex-1">
+          <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Enter Assistant ID (e.g. asst_...)"
+            value={assistantId}
+            onChange={(e) => setAssistantId(e.target.value)}
+            required
+            className="w-full bg-[#F0F0F0] border-0 rounded-full pl-10 pr-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-black"
+          />
+        </div>
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded font-medium"
+          className="bg-black hover:bg-gray-800 disabled:bg-gray-400 text-white px-6 py-3 rounded-full font-medium transition-colors"
         >
           {loading ? 'Loading...' : 'Fetch'}
         </button>
@@ -47,18 +53,18 @@ export default function Assistant() {
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
 
       {result && (
-        <div className="bg-white shadow rounded p-4">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">{result.name || 'Unnamed'}</h2>
+        <div className="bg-white rounded-[20px] border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold text-black mb-2">{result.name || 'Unnamed'}</h2>
           {result.description && (
-            <p className="text-gray-600 mb-3">{result.description}</p>
+            <p className="text-gray-600 mb-4">{result.description}</p>
           )}
-          <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+          <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
             <dt className="text-gray-500">ID</dt>
-            <dd className="text-gray-800 font-mono">{result.id}</dd>
+            <dd className="text-black font-mono">{result.id}</dd>
             <dt className="text-gray-500">Model</dt>
-            <dd className="text-gray-800">{result.model}</dd>
+            <dd className="text-black">{result.model}</dd>
             <dt className="text-gray-500">Created</dt>
-            <dd className="text-gray-800">
+            <dd className="text-black">
               {new Date(result.created_at * 1000).toLocaleString()}
             </dd>
           </dl>
@@ -67,7 +73,7 @@ export default function Assistant() {
             <summary className="text-sm text-gray-500 cursor-pointer hover:text-gray-700">
               Raw JSON
             </summary>
-            <pre className="mt-2 bg-gray-50 rounded p-3 text-xs overflow-auto max-h-64">
+            <pre className="mt-2 bg-[#F0F0F0] rounded-[20px] p-3 text-xs overflow-auto max-h-64">
               {JSON.stringify(result, null, 2)}
             </pre>
           </details>

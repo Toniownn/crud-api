@@ -6,6 +6,10 @@ const port = process.env.PORT;
 const productRoutes = require("./routes/Products.js");
 const authRoutes = require("./routes/authRoutes.js");
 const aiAssistantRoutes = require("./routes/aiAssistantRoutes.js");
+const cartRoutes = require("./routes/cartRoutes.js");
+const orderRoutes = require("./routes/orderRoutes.js");
+const customerRoutes = require("./routes/customerRoutes.js");
+const adminRoutes = require("./routes/adminRoutes.js");
 
 const db = require("./database.js");
 
@@ -14,6 +18,10 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/assistant", aiAssistantRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/customer", customerRoutes);
+app.use("/api/admin", adminRoutes);
 
 const initApp = async () => {
   console.log("Testing the database connection..");

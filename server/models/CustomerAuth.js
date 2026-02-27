@@ -18,6 +18,14 @@ const CustomerAuth = db.define(
     password: {
       type: Sequelize.STRING,
     },
+    role: {
+      type: Sequelize.STRING,
+      defaultValue: "user",
+    },
+    disabled: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     freezeTableName: true,

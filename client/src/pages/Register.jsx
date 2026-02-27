@@ -42,7 +42,7 @@ export default function Register() {
   ];
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
+    <div className="flex items-center justify-center min-h-[calc(100vh-64px)] bg-white">
       {alert && (
         <AlertModal
           message={alert.message}
@@ -51,34 +51,36 @@ export default function Register() {
         />
       )}
 
-      <form onSubmit={handleSubmit} className="bg-white shadow rounded p-8 w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800">Register</h2>
+      <div className="w-full max-w-sm">
+        <form onSubmit={handleSubmit} className="bg-white rounded-[20px] border border-gray-200 p-8">
+          <h2 className="text-2xl font-black uppercase text-black mb-6">Register</h2>
 
-        {fields.map(({ name, label, type }) => (
-          <label key={name} className="block mb-4">
-            <span className="text-gray-700 text-sm">{label}</span>
-            <input
-              type={type}
-              name={name}
-              value={form[name]}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </label>
-        ))}
+          {fields.map(({ name, label, type }) => (
+            <label key={name} className="block mb-4">
+              <span className="text-gray-600 text-sm font-medium">{label}</span>
+              <input
+                type={type}
+                name={name}
+                value={form[name]}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full bg-[#F0F0F0] border-0 rounded-full px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-black"
+              />
+            </label>
+          ))}
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-medium"
-        >
-          Register
-        </button>
+          <button
+            type="submit"
+            className="w-full bg-black hover:bg-gray-800 text-white py-3 rounded-full font-medium transition-colors"
+          >
+            Register
+          </button>
 
-        <p className="mt-4 text-sm text-gray-600 text-center">
-          Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Login</Link>
-        </p>
-      </form>
+          <p className="mt-4 text-sm text-gray-500 text-center">
+            Already have an account? <Link to="/login" className="text-black hover:text-gray-600 font-medium">Login</Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

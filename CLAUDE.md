@@ -1,101 +1,123 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Full-stack e-commerce app: Express.js v5.2.1 REST API backend (`server/`) + React v19.2.0 frontend (`client/`).
 
-## Overview
+Features: role-based auth (user/admin), product catalog, shopping cart, orders/checkout, admin dashboard, user profiles.
 
-Full-stack app: Express.js REST API backend (`server/`) + React frontend (`client/`).
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Backend | Express.js v5.2.1, CommonJS modules |
+| Database | PostgreSQL + Sequelize v6.37.7 |
+| Frontend | React v19.2.0, Vite 7.3.1, Tailwind CSS v4.2.1, react-router-dom v7.13.1 |
+| Auth | JWT (bcrypt + 24h tokens), role-based (user/admin) |
 
 ## Project Structure
 
 ```
-├── server/        # Express.js backend (CommonJS)
-│   ├── index.js   # Entry point
-│   ├── database.js
-│   ├── .env
-│   ├── controllers/
-│   ├── middleware/
-│   ├── models/
-│   └── routes/
-├── client/        # React frontend (Vite + Tailwind CSS v4)
-│   └── src/
-│       ├── api/        # axios instance + API call functions
-│       ├── context/    # AuthContext for JWT state
-│       ├── components/ # Navbar, ProtectedRoute
-│       ├── pages/      # Login, Register, Products, Assistant
-│       ├── App.jsx     # Router setup
-│       └── main.jsx    # Entry point
-└── CLAUDE.md
+server/          # Express.js REST API (CommonJS)
+client/          # React SPA (Vite + Tailwind)
+.claude/
+  rules/         # Project rules (auto-loaded)
+  agents/        # Custom agents for this project
+  skills/        # Reusable convention docs
+  commands/      # Slash commands
 ```
 
-## Commands
+## Rules (`.claude/rules/` — auto-loaded)
 
-- **Start backend:** `cd server && node index.js` (runs on port from `.env`, default 3000)
-- **Start backend with auto-reload:** `cd server && npx nodemon index.js`
-- **Start frontend:** `cd client && npm run dev` (Vite dev server, proxies `/api` to backend)
-- **Build frontend:** `cd client && npm run build`
-- **Install backend deps:** `cd server && npm install`
-- **Install frontend deps:** `cd client && npm install`
-- **No test suite configured** — `npm test` is a placeholder in both.
+| File | Topic |
+|------|-------|
+| `01-overview.md` | Project overview and structure |
+| `02-commands.md` | Dev commands, env vars |
+| `03-backend-architecture.md` | Server file layout, route groups, layers |
+| `04-database.md` | Sequelize models, relationships, conventions |
+| `05-authentication.md` | Auth flow, JWT, middleware patterns |
+| `06-api-endpoints.md` | All REST endpoints by resource |
+| `07-frontend-architecture.md` | Components, API modules, file layout |
+| `08-pages-routing.md` | Pages, routes, route protection |
+| `09-styling.md` | Tailwind CSS v4 conventions |
+| `10-agent-strategy.md` | Parallel agent strategy, common pitfalls |
+| `11-known-issues.md` | Known bugs and anti-patterns |
 
-## Backend Architecture
+## Agents (`.claude/agents/`)
 
-**Entry point:** `server/index.js` — sets up Express, CORS, mounts route groups, authenticates the DB connection, and starts listening.
+| Agent | Purpose |
+|-------|---------|
+| `backend-feature` | Creates a complete backend feature (model, controller, route, wiring, migration) |
+| `frontend-feature` | Creates a complete frontend feature (API module, page, routing, nav) |
+| `full-stack-feature` | Orchestrates end-to-end features across backend and frontend |
+| `code-review` | Reviews code changes for project convention compliance |
+| `database` | Creates/modifies Sequelize models, associations, and migration SQL |
+| `migration` | Generates PostgreSQL migration statements for `server/migrations.sql` |
 
-**Layers follow: routes → controllers → models (Sequelize)**
+## Skills (`.claude/skills/`)
 
-### Route Groups
+| Skill | Purpose |
+|-------|---------|
+| `create-model` | Sequelize model with `freezeTableName: true`, `timestamps: false` |
+| `create-controller` | Express controller with try/catch, `req.query.id` pattern |
+| `create-route` | Express route file with auth middleware |
+| `create-page` | React page with Tailwind CSS v4 styling |
+| `create-api` | Frontend API module using shared axios instance |
+| `wire-route` | Mount a new route group in `server/index.js` |
+| `react-component` | General React component (page or reusable) |
 
-| Prefix | Route File | Auth Required |
-|---|---|---|
-| `/api/auth` | `server/routes/authRoutes.js` | No |
-| `/api/products` | `server/routes/Products.js` | Yes (JWT) |
-| `/api/assistant` | `server/routes/aiAssistantRoutes.js` | Yes (JWT) |
+## Slash Commands (`.claude/commands/`)
 
-### Database
+| Command | Description |
+|---------|-------------|
+| `/create-model` | Create a Sequelize model — arg: `"ModelName: field(TYPE), ..."` |
+| `/create-controller` | Create an Express controller — arg: `"name: methods"` |
+| `/create-route` | Create an Express route file — arg: `"name: endpoints"` |
+| `/create-page` | Create a React page component — arg: `"Name: description"` |
+| `/create-api` | Create a frontend API module — arg: `"name: endpoints"` |
+| `/wire-route` | Mount a route in `server/index.js` — arg: `"prefix routeFile"` |
 
-- **ORM:** Sequelize v6 with PostgreSQL (`pg` driver)
-- **Connection:** `server/database.js` — creates a Sequelize instance from env vars (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USERNAME`, `DB_PASSWORD`, `DIALECT`)
-- **All models use `freezeTableName: true` and `timestamps: false`** — table names match model names exactly, no `createdAt`/`updatedAt` columns.
-- Tables are expected to already exist in Postgres; there are no migrations or `sync()` calls.
+## Workflow Rules
 
-### Models & Relationships
+**Always use the matching skill, agent, or rule — never freestyle conventions.**
 
-- **Customer** (`customer` table) — PK: `customer_id` (UUID string)
-- **CustomerAuth** (`customer_auth` table) — PK: `id` (UUID), FK: `customer_uuid` → `customer.customer_id`
-- **Product** (`product` table) — PK: `id` (UUID string), fields: `product_name`, `product_category`, `price`, `quantity`
-- Associations defined in `server/models/index.js`: Customer hasOne CustomerAuth, CustomerAuth belongsTo Customer.
+### 1. Creating Files → Use the Matching Skill
 
-### Authentication Flow
+When creating a new file, follow the corresponding skill as the convention guide:
 
-1. **Register** (`POST /api/auth/register`): creates Customer + CustomerAuth with bcrypt-hashed password.
-2. **Login** (`POST /api/auth/login`): validates credentials, returns JWT (24h expiry).
-3. **Protected routes** use `server/middleware/auth.js` which verifies the Bearer token and attaches decoded payload to `req.user`.
+| Creating... | Use Skill |
+|-------------|-----------|
+| Sequelize model | `create-model` |
+| Express controller | `create-controller` |
+| Express route file | `create-route` |
+| React page component | `create-page` |
+| Frontend API module | `create-api` |
+| Mounting a route in `server/index.js` | `wire-route` |
 
-### Product CRUD
+### 2. Building Multi-File Features → Use the Matching Agent
 
-- Update and delete use `req.query.id` (query parameter), not route params.
-- Create accepts body payload directly via `Product.create(req.body)`.
+When a task spans multiple files, use the appropriate agent to orchestrate:
 
-### AI Assistant
+| Task Scope | Use Agent |
+|------------|-----------|
+| Backend-only feature (model + controller + route + migration) | `backend-feature` |
+| Frontend-only feature (API module + page + routing + nav) | `frontend-feature` |
+| Full-stack feature (backend + frontend end-to-end) | `full-stack-feature` |
+| Database model or association changes | `database` |
+| SQL migration generation | `migration` |
+| Reviewing code for convention compliance | `code-review` |
 
-- `server/controllers/aiAssistantController.js` proxies requests to the OpenAI Assistants API v2 using axios.
-- Requires `OPENAI_API_KEY` in `.env`.
+### 3. Editing Existing Files → Consult the Relevant Rules
 
-## Frontend Architecture
+When modifying existing files, consult the matching rule files to maintain conventions:
 
-- **Framework:** React 19 with Vite
-- **Styling:** Tailwind CSS v4 (via `@tailwindcss/vite` plugin)
-- **Routing:** react-router-dom v7
-- **HTTP:** axios with JWT interceptor (`client/src/api/axios.js`)
-- **Auth state:** React Context (`client/src/context/AuthContext.jsx`) stores JWT + customer info in localStorage
+| Editing... | Consult Rule |
+|------------|-------------|
+| Backend files | `03-backend-architecture`, `05-authentication` |
+| Database models | `04-database` |
+| API endpoints | `06-api-endpoints` |
+| Frontend components/pages | `07-frontend-architecture`, `08-pages-routing` |
+| Styling | `09-styling` |
+| Multi-agent work | `10-agent-strategy` |
 
-### Pages
+### 4. Post-Feature Review
 
-- **Login** / **Register** — public auth forms
-- **Products** — CRUD table (create, edit, delete) behind auth
-- **Assistant** — OpenAI assistant lookup by ID behind auth
-
-## Environment Variables (`server/.env`)
-
-`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USERNAME`, `DB_PASSWORD`, `DIALECT`, `JWT_SECRET`, `PORT`, `OPENAI_API_KEY`
+**Always** run the `code-review` agent after completing any feature to verify convention compliance.

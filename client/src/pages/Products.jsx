@@ -2,6 +2,12 @@ import { useEffect, useState } from 'react';
 import { getAllProducts, createProduct, updateProduct, deleteProduct } from '../api/products';
 import { v4 as uuidv4 } from 'uuid';
 import AlertModal from '../components/AlertModal';
+import {
+  PlusIcon,
+  PencilSquareIcon,
+  PencilIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
 
 const EMPTY = { product_name: '', product_category: '', price: '', quantity: '' };
 
@@ -88,7 +94,7 @@ export default function Products() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">Products</h1>
+      <h1 className="text-3xl font-black uppercase text-black mb-8">Products</h1>
 
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
 
@@ -100,14 +106,14 @@ export default function Products() {
         />
       )}
 
-      <form onSubmit={handleSubmit} className="bg-white shadow rounded p-4 mb-6 grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} className="bg-white rounded-[20px] border border-gray-200 p-6 mb-6 grid grid-cols-2 gap-4">
         <input
           name="product_name"
           placeholder="Product Name"
           value={form.product_name}
           onChange={handleChange}
           required
-          className="border border-gray-300 rounded px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="bg-[#F0F0F0] border-0 rounded-full px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-black"
         />
         <input
           name="product_category"
@@ -115,7 +121,7 @@ export default function Products() {
           value={form.product_category}
           onChange={handleChange}
           required
-          className="border border-gray-300 rounded px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="bg-[#F0F0F0] border-0 rounded-full px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-black"
         />
         <input
           name="price"
@@ -124,7 +130,7 @@ export default function Products() {
           value={form.price}
           onChange={handleChange}
           required
-          className="border border-gray-300 rounded px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="bg-[#F0F0F0] border-0 rounded-full px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-black"
         />
         <input
           name="quantity"
@@ -133,20 +139,30 @@ export default function Products() {
           value={form.quantity}
           onChange={handleChange}
           required
-          className="border border-gray-300 rounded px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="bg-[#F0F0F0] border-0 rounded-full px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-black"
         />
         <div className="col-span-2 flex gap-2">
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium"
+            className="bg-black hover:bg-gray-800 text-white px-6 py-2.5 rounded-full font-medium transition-colors inline-flex items-center gap-1.5"
           >
-            {editingId ? 'Update' : 'Create'}
+            {editingId ? (
+              <>
+                <PencilSquareIcon className="w-5 h-5" />
+                Update
+              </>
+            ) : (
+              <>
+                <PlusIcon className="w-5 h-5" />
+                Create
+              </>
+            )}
           </button>
           {editingId && (
             <button
               type="button"
               onClick={handleCancel}
-              className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded font-medium"
+              className="border border-gray-300 hover:bg-gray-50 text-black rounded-full px-6 py-2.5 font-medium transition-colors"
             >
               Cancel
             </button>
@@ -154,35 +170,37 @@ export default function Products() {
         </div>
       </form>
 
-      <div className="bg-white shadow rounded overflow-hidden">
+      <div className="bg-white rounded-[20px] border border-gray-200 overflow-hidden">
         <table className="w-full text-left">
-          <thead className="bg-gray-100">
+          <thead className="bg-[#F0F0F0]">
             <tr>
-              <th className="px-4 py-3 text-gray-700 text-sm font-semibold">Name</th>
-              <th className="px-4 py-3 text-gray-700 text-sm font-semibold">Category</th>
-              <th className="px-4 py-3 text-gray-700 text-sm font-semibold">Price</th>
-              <th className="px-4 py-3 text-gray-700 text-sm font-semibold">Qty</th>
-              <th className="px-4 py-3 text-gray-700 text-sm font-semibold">Actions</th>
+              <th className="px-6 py-3 text-gray-600 text-xs font-semibold uppercase tracking-wider">Name</th>
+              <th className="px-6 py-3 text-gray-600 text-xs font-semibold uppercase tracking-wider">Category</th>
+              <th className="px-6 py-3 text-gray-600 text-xs font-semibold uppercase tracking-wider">Price</th>
+              <th className="px-6 py-3 text-gray-600 text-xs font-semibold uppercase tracking-wider">Qty</th>
+              <th className="px-6 py-3 text-gray-600 text-xs font-semibold uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody>
             {products.map((p) => (
-              <tr key={p.id} className="border-t border-gray-200">
-                <td className="px-4 py-3 text-gray-800">{p.product_name}</td>
-                <td className="px-4 py-3 text-gray-800">{p.product_category}</td>
-                <td className="px-4 py-3 text-gray-800">{p.price}</td>
-                <td className="px-4 py-3 text-gray-800">{p.quantity}</td>
-                <td className="px-4 py-3 flex gap-2">
+              <tr key={p.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4 text-black">{p.product_name}</td>
+                <td className="px-6 py-4 text-black">{p.product_category}</td>
+                <td className="px-6 py-4 text-black">{p.price}</td>
+                <td className="px-6 py-4 text-black">{p.quantity}</td>
+                <td className="px-6 py-4 flex gap-2">
                   <button
                     onClick={() => handleEdit(p)}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
+                    className="bg-black hover:bg-gray-800 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors inline-flex items-center gap-1"
                   >
+                    <PencilIcon className="w-4 h-4" />
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(p.id)}
-                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors inline-flex items-center gap-1"
                   >
+                    <TrashIcon className="w-4 h-4" />
                     Delete
                   </button>
                 </td>
@@ -190,7 +208,7 @@ export default function Products() {
             ))}
             {products.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-gray-500">
+                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
                   No products found.
                 </td>
               </tr>

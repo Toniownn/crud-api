@@ -51,6 +51,10 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: "Invalid username or password" });
     }
 
+    if (authRecord.disabled) {
+      return res.status(403).json({ message: "Account is disabled" });
+    }
+
     const isMatch = await bcrypt.compare(password, authRecord.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid username or password" });
@@ -60,6 +64,7 @@ exports.login = async (req, res) => {
       {
         customer_id: authRecord.customer.customer_id,
         username: authRecord.username,
+        role: authRecord.role,
       },
       JWT_SECRET,
       { expiresIn: "24h" },
@@ -72,6 +77,7 @@ exports.login = async (req, res) => {
         customer_id: authRecord.customer.customer_id,
         fname: authRecord.customer.fname,
         lname: authRecord.customer.lname,
+        role: authRecord.role,
       },
     });
   } catch (error) {

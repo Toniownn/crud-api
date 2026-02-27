@@ -21,7 +21,13 @@ const Product = db.define('product', {
     },
     quantity: {
         type: Sequelize.MEDIUMINT,
-        
+
+    },
+    description: {
+        type: Sequelize.TEXT,
+    },
+    image_url: {
+        type: Sequelize.TEXT,
     }
 },
     {
