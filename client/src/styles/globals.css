@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-surface: #fafaf8;
+    --color-surface-alt: #f2f1ed;
+    --color-text-primary: #1a1814;
+    --color-text-secondary: #44403c;
+    --color-text-muted: #78716c;
+    --color-brand: #1b6b5a;
+    --color-brand-light: #2a9d8f;
+    --color-brand-dark: #14504a;
+    --color-accent: #c2956b;
+    --color-border: #e2e0da;
+    --color-neutral-50: #fafaf8;
+    --color-neutral-100: #f2f1ed;
+    --color-neutral-200: #e2e0da;
+    --color-neutral-300: #d1cec6;
+    --color-neutral-400: #a8a49c;
+    --color-neutral-500: #78716c;
+    --color-neutral-600: #57534e;
+    --color-neutral-700: #44403c;
+    --color-neutral-800: #292524;
+    --color-neutral-900: #1c1917;
+    --color-neutral-950: #0f0e0d;
+    --color-success: #16a34a;
+    --color-warning: #d97706;
+    --color-error: #dc2626;
+    --color-info: #2563eb;
+  }
+
+  .dark {
+    --color-surface: #1c1917;
+    --color-surface-alt: #292524;
+    --color-text-primary: #fafaf8;
+    --color-text-secondary: #d1cec6;
+    --color-text-muted: #a8a49c;
+    --color-brand: #3aafa0;
+    --color-brand-light: #5ec4b6;
+    --color-brand-dark: #2a9d8f;
+    --color-accent: #d4a574;
+    --color-border: #44403c;
+    --color-neutral-50: #0f0e0d;
+    --color-neutral-100: #1c1917;
+    --color-neutral-200: #292524;
+    --color-neutral-300: #44403c;
+    --color-neutral-400: #57534e;
+    --color-neutral-500: #78716c;
+    --color-neutral-600: #a8a49c;
+    --color-neutral-700: #d1cec6;
+    --color-neutral-800: #e2e0da;
+    --color-neutral-900: #f2f1ed;
+    --color-neutral-950: #fafaf8;
+  }
+
+  html {
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: "DM Serif Display", Georgia, serif;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
