@@ -44,3 +44,6 @@ CREATE TABLE IF NOT EXISTS order_item (
 
 -- Phase 5: Admin - Disable users
 ALTER TABLE customer_auth ADD COLUMN IF NOT EXISTS disabled BOOLEAN NOT NULL DEFAULT false;
+
+-- Phase 6: Profile Image
+ALTER TABLE customer ADD COLUMN IF NOT EXISTS profile_image TEXT;

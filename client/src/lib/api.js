@@ -23,13 +23,14 @@ export async function api(path, options = {}) {
   const { token, logout } = useAuthStore.getState();
   const { body, ...rest } = options;
 
-  const headers = { "Content-Type": "application/json" };
+  const isFormData = body instanceof FormData;
+  const headers = isFormData ? {} : { "Content-Type": "application/json" };
   if (token) headers.Authorization = `Bearer ${token}`;
 
   const res = await fetch(path, {
     ...rest,
     headers: { ...headers, ...rest.headers },
-    body: body ? JSON.stringify(body) : undefined,
+    body: isFormData ? body : body ? JSON.stringify(body) : undefined,
   });
 
   if (res.status === 401) {

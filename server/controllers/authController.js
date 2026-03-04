@@ -78,6 +78,7 @@ exports.login = async (req, res) => {
         fname: authRecord.customer.fname,
         lname: authRecord.customer.lname,
         role: authRecord.role,
+        profile_image: authRecord.customer.profile_image,
       },
     });
   } catch (error) {

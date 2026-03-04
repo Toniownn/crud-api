@@ -14,7 +14,6 @@ export function Header() {
   const loadCart = useCartStore((s) => s.loadCart);
   const customer = useAuthStore((s) => s.customer);
   const token = useAuthStore((s) => s.token);
-  const logout = useAuthStore((s) => s.logout);
   const isAuthenticated = !!token;
 
   useEffect(() => {
@@ -45,12 +44,30 @@ export function Header() {
             <div className="hidden items-center gap-2 md:flex">
               {isAuthenticated ? (
                 <>
-                  <span className="text-sm text-text-secondary">
-                    {customer?.fname}
-                  </span>
-                  <Button variant="ghost" size="sm" onClick={logout}>
-                    Log out
-                  </Button>
+                  {customer?.role === "admin" && (
+                    <Link to="/admin">
+                      <Button variant="ghost" size="sm">Admin</Button>
+                    </Link>
+                  )}
+                  <Link
+                    to="/account"
+                    className="flex min-h-11 min-w-11 items-center justify-center"
+                    aria-label="Account"
+                  >
+                    <div className="h-8 w-8 overflow-hidden rounded-full bg-surface-alt ring-2 ring-transparent transition-all duration-fast hover:ring-brand">
+                      {customer?.profile_image ? (
+                        <img
+                          src={customer.profile_image}
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-text-muted">
+                          {customer?.fname?.charAt(0)?.toUpperCase() || "?"}
+                        </div>
+                      )}
+                    </div>
+                  </Link>
                 </>
               ) : (
                 <>
@@ -141,11 +158,34 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
-            <div className="mt-2 flex gap-2 border-t border-border pt-3">
+            <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
               {isAuthenticated ? (
-                <Button variant="outline" size="sm" className="w-full" onClick={logout}>
-                  Log out
-                </Button>
+                <>
+                  {customer?.role === "admin" && (
+                    <Link to="/admin">
+                      <Button variant="outline" size="sm" className="w-full">Admin Dashboard</Button>
+                    </Link>
+                  )}
+                  <Link
+                    to="/account"
+                    className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium text-text-secondary transition-colors duration-fast hover:bg-surface-alt hover:text-text-primary"
+                  >
+                    <div className="h-7 w-7 shrink-0 overflow-hidden rounded-full bg-surface-alt">
+                      {customer?.profile_image ? (
+                        <img
+                          src={customer.profile_image}
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-text-muted">
+                          {customer?.fname?.charAt(0)?.toUpperCase() || "?"}
+                        </div>
+                      )}
+                    </div>
+                    Account
+                  </Link>
+                </>
               ) : (
                 <>
                   <Link to="/login" className="flex-1">

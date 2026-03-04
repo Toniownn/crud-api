@@ -158,9 +158,18 @@ Do NOT use these patterns — they produce generic, forgettable UI:
 2. Analyze bundle before deploy — no single chunk >150KB gzipped
 3. Preload display font in `<head>` with `font-display: swap`
 
+## Skills
+
+Always load matching skills before starting work:
+
+- `/anthonix-admin` — any admin-facing feature: dashboard, protected routes, admin stats, order/product/customer management, adminAuth, `/api/admin/*` endpoints
+- `/anthonix-fullstack` — adding a new full-stack feature end-to-end: new endpoint + page, "build [feature]", "add API and UI for...", any task requiring both Express routes/controllers and a React feature folder
+- `/frontend-design` — building or modifying any UI component, layout, or page
+
+If multiple skills match, load all of them. Only skip skills for pure data changes, config edits, or backend-only refactors with no UI impact.
+
 ## Token-Saving Rules
 
 1. Do NOT use agents (Task tool) unless the task clearly requires multi-file exploration or parallel sub-tasks — prefer direct Glob, Grep, Read instead
-2. Do NOT load skills (`/frontend-design`) unless actively building a new UI component or layout — skip for data changes, refactors, or config edits
-3. Do NOT create task lists (TaskCreate) for simple or single-step changes
-4. Keep responses short — no long explanations unless asked
+2. Do NOT create task lists (TaskCreate) for simple or single-step changes
+3. Keep responses short — no long explanations unless asked

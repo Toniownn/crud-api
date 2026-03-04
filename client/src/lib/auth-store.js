@@ -20,6 +20,13 @@ export const useAuthStore = create((set) => ({
     set({ token, customer });
   },
 
+  updateCustomer(partial) {
+    const { token, customer } = useAuthStore.getState();
+    const updated = { ...customer, ...partial };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ token, customer: updated }));
+    set({ customer: updated });
+  },
+
   logout() {
     localStorage.removeItem(STORAGE_KEY);
     set({ token: null, customer: null });

@@ -39,6 +39,26 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
+exports.updateProfileImage = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No image file provided" });
+    }
+
+    const imageUrl = `/uploads/${req.file.filename}`;
+
+    await Customer.update(
+      { profile_image: imageUrl },
+      { where: { customer_id: req.user.customer_id } }
+    );
+
+    res.json({ message: "Profile image updated", profile_image: imageUrl });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 exports.changePassword = async (req, res) => {
   try {
     const { current_password, new_password } = req.body;

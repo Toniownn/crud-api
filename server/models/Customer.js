@@ -16,7 +16,10 @@ const Customer = db.define('customer', {
     },
     address: {
         type: Sequelize.STRING,
-        
+
+    },
+    profile_image: {
+        type: Sequelize.STRING,
     },
 },
     {

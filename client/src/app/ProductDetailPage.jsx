@@ -142,7 +142,7 @@ export function ProductDetailPage() {
         {/* Product layout */}
         <div className="grid gap-8 md:grid-cols-2 md:gap-12 lg:gap-16">
           {/* Image */}
-          <div className="relative overflow-hidden rounded-sm" style={{ aspectRatio: "4 / 5" }}>
+          <div className="relative overflow-hidden rounded-sm bg-surface-raised" style={{ aspectRatio: "4 / 5" }}>
             <img
               src={product.image}
               alt={product.name}
@@ -254,7 +254,7 @@ export function ProductDetailPage() {
             <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
               {related.map((p) => (
                 <Link key={p.id} to={`/products/${p.slug}`} className="group">
-                  <div className="relative overflow-hidden rounded-sm" style={{ aspectRatio: "4 / 5" }}>
+                  <div className="relative overflow-hidden rounded-sm bg-surface-raised" style={{ aspectRatio: "4 / 5" }}>
                     <img
                       src={p.image}
                       alt={p.name}

@@ -9,5 +9,8 @@ router.get("/orders", authenticate, adminAuth, adminController.getAllOrders);
 router.put("/orders/status", authenticate, adminAuth, adminController.updateOrderStatus);
 router.get("/users", authenticate, adminAuth, adminController.getAllUsers);
 router.put("/users/toggle-status", authenticate, adminAuth, adminController.toggleUserStatus);
+router.put("/users/update", authenticate, adminAuth, adminController.updateUser);
+router.delete("/users", authenticate, adminAuth, adminController.deleteUser);
+router.delete("/orders", authenticate, adminAuth, adminController.deleteOrder);
 
 module.exports = router;

@@ -40,7 +40,7 @@ function CartLineItem({ item }) {
   return (
     <div className="flex gap-4 border-b border-border py-6 first:pt-0 last:border-b-0 sm:gap-6">
       <Link to={`/products/${product.slug}`} className="shrink-0">
-        <div className="h-24 w-20 overflow-hidden rounded-sm sm:h-32 sm:w-28" style={{ aspectRatio: "4 / 5" }}>
+        <div className="h-24 w-20 overflow-hidden rounded-sm bg-surface-raised sm:h-32 sm:w-28" style={{ aspectRatio: "4 / 5" }}>
           <img
             src={product.image}
             alt={product.name}

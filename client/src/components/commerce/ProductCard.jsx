@@ -7,7 +7,7 @@ export function ProductCard({ product, size = "default", className }) {
   return (
     <article className={cn("group", className)}>
       <Link to={`/products/${product.slug}`} className="block">
-        <div className="relative overflow-hidden rounded-sm" style={{ aspectRatio: "4 / 5" }}>
+        <div className="relative overflow-hidden rounded-sm bg-surface-raised" style={{ aspectRatio: "4 / 5" }}>
           <img
             src={product.image}
             alt={product.name}

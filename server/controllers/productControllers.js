@@ -1,5 +1,8 @@
 const { Op } = require("sequelize");
+const { v4: uuidv4 } = require("uuid");
 const Product = require("../models/Product");
+const CartItem = require("../models/CartItem");
+const OrderItem = require("../models/OrderItem");
 
 exports.getAllProduct = async (req, res) => {
   try {
@@ -12,7 +15,11 @@ exports.getAllProduct = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   try {
-    const createProduct = await Product.create(req.body);
+    const data = { id: uuidv4(), ...req.body };
+    if (req.file) {
+      data.image_url = `/uploads/${req.file.filename}`;
+    }
+    const createProduct = await Product.create(data);
     res.status(201).json(createProduct);
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -22,12 +29,17 @@ exports.createProduct = async (req, res) => {
 exports.updateProduct = async(req, res) => {
     try{
         const {id} = req.query;
-        
+
         if (!id) {
       return res.status(400).json({ message: "Product id is required" });
     }
 
-    const [updated] = await Product.update(req.body, {
+    const data = { ...req.body };
+    if (req.file) {
+      data.image_url = `/uploads/${req.file.filename}`;
+    }
+
+    const [updated] = await Product.update(data, {
       where: { id }
     });
 
@@ -49,17 +61,16 @@ exports.deleteProduct = async (req,res) => {
             return res.status(400).json({message: "Product id is required"});
         }
 
-        const deleted = await Product.destroy({
-            where: {id}
-        });
-
-        if(deleted === 0) {
-            console.log(deleted)
+        const product = await Product.findByPk(id);
+        if(!product) {
             return res.status(404).json({ message: "Product not found" });
-
         }
-        console.log(deleted)
-        res.status(201).json({message: `The Product ${id} deleted successfully`,});
+
+        await CartItem.destroy({ where: { product_id: id } });
+        await OrderItem.destroy({ where: { product_id: id } });
+        await Product.destroy({ where: { id } });
+
+        res.status(200).json({message: `The Product ${id} deleted successfully`});
     }catch(e) {
         res.status(500).json({error: `oh no the error is ${e.message}`})
     }
@@ -74,7 +85,7 @@ exports.searchProducts = async (req, res) => {
       where.product_name = { [Op.iLike]: `%${search}%` };
     }
     if (category) {
-      where.product_category = category;
+      where.product_category = { [Op.iLike]: category };
     }
     if (min_price || max_price) {
       where.price = {};

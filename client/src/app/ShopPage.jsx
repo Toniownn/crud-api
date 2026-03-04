@@ -44,7 +44,7 @@ function ShopProductCard({ product }) {
 
   return (
     <article className="group">
-      <div className="relative overflow-hidden rounded-sm" style={{ aspectRatio: "4 / 5" }}>
+      <div className="relative overflow-hidden rounded-sm bg-surface-raised" style={{ aspectRatio: "4 / 5" }}>
         <Link to={`/products/${product.slug}`}>
           <img
             src={product.image}

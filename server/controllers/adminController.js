@@ -147,3 +147,81 @@ exports.toggleUserStatus = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+exports.deleteOrder = async (req, res) => {
+  try {
+    const { id } = req.query;
+
+    if (!id) {
+      return res.status(400).json({ message: "Order id is required" });
+    }
+
+    const order = await Order.findByPk(id);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    await OrderItem.destroy({ where: { order_id: id } });
+    await Order.destroy({ where: { id } });
+
+    res.json({ message: "Order deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+    const { customer_id, fname, lname, address, role } = req.body;
+
+    if (!customer_id) {
+      return res.status(400).json({ message: "Customer id is required" });
+    }
+
+    const customer = await Customer.findByPk(customer_id);
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    await Customer.update(
+      { fname, lname, address },
+      { where: { customer_id } }
+    );
+
+    if (role) {
+      await CustomerAuth.update(
+        { role },
+        { where: { customer_uuid: customer_id } }
+      );
+    }
+
+    res.json({ message: "Customer updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const { id } = req.query;
+
+    if (!id) {
+      return res.status(400).json({ message: "Customer id is required" });
+    }
+
+    const customer = await Customer.findByPk(id);
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    await CustomerAuth.destroy({ where: { customer_uuid: id } });
+    await Customer.destroy({ where: { customer_id: id } });
+
+    res.json({ message: "Customer deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

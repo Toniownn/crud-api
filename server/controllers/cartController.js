@@ -15,9 +15,9 @@ exports.getCart = async (req, res) => {
       include: [{ model: Product }],
     });
 
-    const validItems = items.filter((item) => item.Product);
+    const validItems = items.filter((item) => item.product);
     const total = validItems.reduce((sum, item) => {
-      return sum + item.Product.price * item.quantity;
+      return sum + item.product.price * item.quantity;
     }, 0);
 
     res.json({ items: validItems, total });
